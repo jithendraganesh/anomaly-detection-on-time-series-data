@@ -1,137 +1,101 @@
-# anomaly-detection-on-time-series-data
-The project consists of two complementary approaches to time-series anomaly detection:
 
-1. LSTM Autoencoder-Based Detection
-Uses bidirectional LSTM layers to learn temporal dependencies
+# 🌡️ Anomaly Detection Using LSTM and STOC
 
-Trained on normal engine behavior to detect deviations (anomalies)
+This project explores and compares two deep learning approaches for anomaly detection in time-series data:
+- A traditional **LSTM** model.
+- A modern **Stacked Transformer with 1D CNN (STOC)** based on recent research.
 
-Incorporates both static and adaptive thresholding
+---
 
-2. Anomaly Transformer with KDE Thresholding
-Leverages Transformer-based attention mechanisms for anomaly detection
+## 📌 Table of Contents
 
-Incorporates attention-based KL divergence loss to model temporal dependencies
+- [Overview](#overview)
+- [Dataset](#dataset)
+- [Models](#models)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Results](#results)
+- [References](#references)
 
-Uses Kernel Density Estimation (KDE) for adaptive anomaly scoring
+---
 
-🧠 Core Components
-🔹 CMAPSS Dataset Structure
-Inputs:
+## 📖 Overview
 
-Operational settings: op1, op2, op3
+This notebook performs a **comparative study of two architectures**:
+- **LSTM**: A classical RNN-based model well-suited for sequence modeling and anomaly detection.
+- **STOC**: A hybrid model combining transformer blocks for representation learning and 1D CNNs for local temporal pattern extraction.
 
-21 sensors: sensor1 to sensor21
+The goal is to evaluate how modern attention-based architectures compare with traditional sequential models in the context of time-series anomaly detection.
 
-Metadata:
+---
 
-Engine unit ID, cycle number
+## 📊 Dataset
 
-Target: Remaining Useful Life (RUL) for each engine
+The dataset used in this study is from Kaggle:
+- **Name**: Weather Analysis Dataset
+- **File**: `climate_data.csv`
+- **Features**: Includes temperature, humidity, pressure, and other climate indicators.
+- **Target**: Anomaly score based on reconstructed prediction vs actual values.
 
-🔹 LSTM Autoencoder Architecture
-Encoder:
+---
 
-Bidirectional LSTM layers (64 → 32 units)
+## 🧠 Models
 
-Bottleneck:
+### 1. LSTM Autoencoder
+- Used as a benchmark baseline.
+- Encodes the time series into a latent space and reconstructs it.
+- High reconstruction error signals potential anomalies.
 
-Dense layer (32 units)
+### 2. STOC (Stacked Transformer + 1D CNN)
+- Implements multi-head self-attention to capture global temporal dependencies.
+- Combines with 1D CNN layers for localized feature extraction.
+- More complex, inspired by recent research on hybrid architectures.
 
-Decoder:
+---
 
-Bidirectional LSTM layers (32 → 64 units)
+## ⚙️ Installation
 
-Regularization:
+Make sure you are running in a Kaggle environment or install the following locally:
 
-Dropout layers (0.2)
+```bash
+pip install numpy pandas matplotlib seaborn scikit-learn tensorflow
+```
 
-🔍 Anomaly Detection
-Model reconstructs input sequences
+---
 
-Anomaly score = Reconstruction error (MSE)
+## 🚀 Usage
 
-Static Threshold: 95th percentile of training errors
+1. Clone this repository or run the notebook on [Kaggle](https://www.kaggle.com/).
+2. Load the dataset:
+   - Ensure the `climate_data.csv` is available in the input folder.
+3. Run all cells in the notebook.
+4. View loss plots, reconstruction errors, and anomaly flags.
 
-Adaptive Threshold: Based on rolling error windows
+---
 
-🔹 Anomaly Transformer Architecture
-Input: Multivariate time-series windows
+## 📈 Results
 
-Layers:
+The notebook provides:
+- **Visualization of time-series anomalies**
+- **Model loss curves**
+- **Precision, Recall, F1-score** metrics
+- **Comparison of anomaly detection capability** between LSTM and STOC
 
-3 Encoder Layers
+Key findings:
+- LSTM performs well on simple temporal patterns.
+- STOC offers improved anomaly localization and robustness to complex data.
 
-Multi-head Self-Attention (8 heads)
+---
 
-d_model = 512, d_ff = 512
+## 📚 References
 
-Activation = GELU, Dropout = 0.1
+- Research Paper: *Time-Series Anomaly Detection with Stacked Transformer Representations and 1D Convolutional Network*
+- Kaggle Dataset: [Weather Analysis](https://www.kaggle.com/datasets)
+- TensorFlow Documentation
+- PyTorch Transformers
 
-🔍 Anomaly Detection with KDE
-Model learns to reconstruct input sequences
+---
 
-Reconstruction error + KL divergence used during training
+## 🙌 Acknowledgements
 
-KDE is used to estimate the log-density of test errors
-
-Thresholding:
-
-Bottom 5% of log-density → classified as anomaly
-
-📈 Training and Evaluation
-✅ Preprocessing
-Random Forest for sensor selection based on RUL importance
-
-MinMax normalization across all selected features
-
-Windowed sequence creation for temporal modeling
-
-🧪 Evaluation Metrics
-Distribution plots of reconstruction errors
-
-KDE-based log-probability visualizations
-
-Number and distribution of detected anomalies
-
-Feature importance visualization
-
-📊 Visualization Outputs
-Histogram of KDE Log-Probabilities
-
-Highlights anomalies as low-density points
-
-Sequence-wise Anomaly Plot
-
-Shows test sequences with log-probabilities
-
-Anomalies marked with red 'x'
-
-💡 Results and Insights
-Anomaly Transformer + KDE shows high precision in adaptive anomaly detection
-
-LSTM Autoencoder captures long-term patterns well and benefits from bidirectional encoding
-
-Feature importance plots help interpret which sensors contribute to failure predictions
-
-🔧 Technologies Used
-Language: Python
-
-Libraries:
-
-PyTorch (deep learning)
-
-scikit-learn (KDE, Random Forest)
-
-Matplotlib (visualization)
-
-NumPy, pandas (data handling)
-
-💼 Applications
-Predictive Maintenance: Proactively flagging component failures
-
-Aerospace Engineering: Diagnosing engine health using multivariate telemetry
-
-Real-time Monitoring: Can be integrated into aircraft systems for continuous surveillance
-
-Cost Optimization: Reducing unplanned downtime and repair costs
+Developed as part of a deep learning project focused on time-series anomaly detection using both classical and state-of-the-art methods.
